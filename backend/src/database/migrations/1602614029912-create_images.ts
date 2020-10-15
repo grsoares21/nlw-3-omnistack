@@ -26,8 +26,8 @@ export class createImages1602614029912 implements MigrationInterface {
             foreignKeys: [
                 {
                     name: 'ImageOrphanage',
-                    columnNames: ['orhanage_id'],
-                    referencedTableName: 'orphanage',
+                    columnNames: ['orphanage_id'],
+                    referencedTableName: 'orphanages',
                     referencedColumnNames: ['id'],
                     onUpdate: 'CASCADE',
                     onDelete: 'CASCADE'
