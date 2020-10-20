@@ -17,7 +17,7 @@ const schema = Yup.object().shape({
 
 export default class OrphanageService {
   private orphanageRepository: Repository<Orphanage>
-  constructor () {
+  constructor() {
     this.orphanageRepository = getRepository(Orphanage);
   }
 
@@ -32,6 +32,7 @@ export default class OrphanageService {
   }
 
   async getAll() {
+    console.log('get aaal');
     return await this.orphanageRepository.find({
       relations: ['images']
     });
@@ -40,6 +41,6 @@ export default class OrphanageService {
   async getById(id: string) {
     return await this.orphanageRepository.findOneOrFail(id, {
       relations: ['images']
-    });    
+    });
   }
 }

@@ -24,30 +24,32 @@ routes.post('/orphanages', upload.array('images'), async (req, res) => {
     return { path: image.filename }
   })
 
-
-  const createdOrphanage = await orphanageService.create({
+  const orphanageToCreate = {
     name,
     latitude,
     longitude,
     about,
     instructions,
     opening_hours,
-    open_on_weekends,
+    open_on_weekends: open_on_weekends === 'true',
     images
-  });
+  };
 
-  
-  
+
+  const createdOrphanage = await orphanageService.create(orphanageToCreate);
+
+
+
   return res.status(201).json(createdOrphanage);
 });
 
 routes.get('/orphanages', async (req, res) => {
-  const orphanageService = new OrphanageService();  
+  const orphanageService = new OrphanageService();
   return res.json(orphanageView.renderMany(await orphanageService.getAll()));
 });
 
 routes.get('/orphanages/:id', async (req, res) => {
-  const orphanageService = new OrphanageService();  
+  const orphanageService = new OrphanageService();
   const { id } = req.params;
   return res.json(orphanageView.render(await orphanageService.getById(id)));
 });
