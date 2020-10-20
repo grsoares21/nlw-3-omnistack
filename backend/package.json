@@ -21,6 +21,13 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "jest": "^26.6.0",
+    "mock-express-request": "^0.2.2",
+    "moq.ts": "^6.4.0",
+    "@types/mock-express-request": "^0.2.0",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-typescript": "^7.12.1",
     "@types/multer": "^1.4.4",
     "ts-node-dev": "^1.0.0-pre.63"
   }

@@ -2,6 +2,8 @@ import { getRepository, Repository } from "typeorm";
 import Orphanage from "../models/Orphanage";
 import * as Yup from 'yup';
 
+import { IDbConnectionProvider } from "../database/DbConnectionProvider";
+
 const schema = Yup.object().shape({
   name: Yup.string().required(),
   latitude: Yup.number().required(),
@@ -13,33 +15,41 @@ const schema = Yup.object().shape({
   images: Yup.array(Yup.object().shape({
     path: Yup.string().required()
   }))
-})
+});
 
-export default class OrphanageService {
-  private orphanageRepository: Repository<Orphanage>
-  constructor() {
-    this.orphanageRepository = getRepository(Orphanage);
+export interface IOrphanageService {
+  create: (orphanage: Orphanage) => Promise<Orphanage>
+  getAll: () => Promise<Orphanage[]>
+  getById: (id: string) => Promise<Orphanage>
+}
+export default class OrphanageService implements IOrphanageService {
+  private orphanageRepository: Promise<Repository<Orphanage>>
+
+  constructor(dbConnectionProvider: IDbConnectionProvider) {
+    this.orphanageRepository = dbConnectionProvider.GetConnection().then(() => getRepository(Orphanage));
   }
 
-  async create(orphanage: Orphanage) {
+  public async create(orphanage: Orphanage) {
     await schema.validate(orphanage, {
       abortEarly: false
     })
 
-    this.orphanageRepository.create(orphanage);
-    await this.orphanageRepository.save(orphanage);
+    const repository = await this.orphanageRepository;
+    repository.create(orphanage);
+    await repository.save(orphanage);
     return orphanage;
   }
 
-  async getAll() {
-    console.log('get aaal');
-    return await this.orphanageRepository.find({
+  public async getAll() {
+    const repository = await this.orphanageRepository;
+    return await repository.find({
       relations: ['images']
     });
   }
 
-  async getById(id: string) {
-    return await this.orphanageRepository.findOneOrFail(id, {
+  public async getById(id: string) {
+    const repository = await this.orphanageRepository;
+    return await repository.findOneOrFail(id, {
       relations: ['images']
     });
   }
